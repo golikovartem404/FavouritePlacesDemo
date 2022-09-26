@@ -35,11 +35,9 @@ class MainViewController: UIViewController {
     private lazy var sortedControl: UISegmentedControl = {
         let items = ["Date", "Name"]
         let segmentedControl = UISegmentedControl(items: items)
-        segmentedControl.selectedSegmentTintColor = .systemBlue
+        segmentedControl.selectedSegmentTintColor = .systemGray3
         segmentedControl.selectedSegmentIndex = 0
         segmentedControl.backgroundColor = .white
-        segmentedControl.layer.borderColor = UIColor.systemBlue.cgColor
-        segmentedControl.layer.borderWidth = 1
         segmentedControl.addTarget(self, action: #selector(sortingSelection), for: .valueChanged)
         return segmentedControl
     }()
@@ -89,6 +87,7 @@ class MainViewController: UIViewController {
                                                            target: self,
                                                            action: #selector(sortedPlaceByAscending))
         navigationItem.searchController = searchController
+        navigationController?.navigationBar.tintColor = .black
     }
 
     @objc func goToNewPlaceView() {

@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		9C9F204928E20AE300203FA9 /* RatingControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C9F204828E20AE300203FA9 /* RatingControl.swift */; };
+		9C9F204C28E213F900203FA9 /* MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C9F204B28E213F900203FA9 /* MapViewController.swift */; };
 		9CFB200A28E0E0C10030F8EF /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CFB200928E0E0C10030F8EF /* AppDelegate.swift */; };
 		9CFB200C28E0E0C10030F8EF /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CFB200B28E0E0C10030F8EF /* SceneDelegate.swift */; };
 		9CFB200E28E0E0C10030F8EF /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CFB200D28E0E0C10030F8EF /* MainViewController.swift */; };
@@ -22,6 +24,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		9C9F204828E20AE300203FA9 /* RatingControl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RatingControl.swift; sourceTree = "<group>"; };
+		9C9F204B28E213F900203FA9 /* MapViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewController.swift; sourceTree = "<group>"; };
 		9CFB200628E0E0C10030F8EF /* Favourite Places.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Favourite Places.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		9CFB200928E0E0C10030F8EF /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		9CFB200B28E0E0C10030F8EF /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -49,6 +53,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		9C9F204A28E213E400203FA9 /* MapView */ = {
+			isa = PBXGroup;
+			children = (
+				9C9F204B28E213F900203FA9 /* MapViewController.swift */,
+			);
+			path = MapView;
+			sourceTree = "<group>";
+		};
 		9CFB1FFD28E0E0C10030F8EF = {
 			isa = PBXGroup;
 			children = (
@@ -87,11 +99,13 @@
 		9CFB201E28E0E1610030F8EF /* Sources */ = {
 			isa = PBXGroup;
 			children = (
+				9C9F204A28E213E400203FA9 /* MapView */,
 				9CFB202628E0E1D30030F8EF /* Model */,
 				9CFB202028E0E1A30030F8EF /* MainView */,
 				9CFB202928E0E1E70030F8EF /* NewPlaceView */,
 				9CFB201F28E0E1670030F8EF /* App */,
 				9CFB202E28E0E3EA0030F8EF /* StorageManager.swift */,
+				9C9F204828E20AE300203FA9 /* RatingControl.swift */,
 			);
 			path = Sources;
 			sourceTree = "<group>";
@@ -213,6 +227,8 @@
 				9CFB202C28E0E2E60030F8EF /* NewPlaceViewController.swift in Sources */,
 				9CFB200E28E0E0C10030F8EF /* MainViewController.swift in Sources */,
 				9CFB202F28E0E3EA0030F8EF /* StorageManager.swift in Sources */,
+				9C9F204C28E213F900203FA9 /* MapViewController.swift in Sources */,
+				9C9F204928E20AE300203FA9 /* RatingControl.swift in Sources */,
 				9CFB202228E0E1C00030F8EF /* MainViewTableViewCell.swift in Sources */,
 				9CFB200A28E0E0C10030F8EF /* AppDelegate.swift in Sources */,
 				9CFB200C28E0E0C10030F8EF /* SceneDelegate.swift in Sources */,
