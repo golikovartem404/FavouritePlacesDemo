@@ -15,6 +15,7 @@ class NewPlaceViewController: UIViewController {
 
     var delegate: AddNewDataDelegateProtocol?
     var isImageChanged = false
+    var currentPlace: Place?
 
     // MARK: - Outlets
 
@@ -109,6 +110,7 @@ class NewPlaceViewController: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = .systemBackground
         setupNavigationBar()
+        configureViewWithPlace()
         setupView()
         setupHierarchy()
         setupLayout()
@@ -199,7 +201,17 @@ class NewPlaceViewController: UIViewController {
                              location: locationTextField.text,
                              type: typeTextField.text,
                              imageData: imageData)
-        StorageManager.saveObject(place: newPlace)
+        if currentPlace != nil {
+            try! realm.write {
+                currentPlace?.name = newPlace.name
+                currentPlace?.location = newPlace.location
+                currentPlace?.type = newPlace.type
+                currentPlace?.imageData = newPlace.imageData
+            }
+        } else {
+            StorageManager.saveObject(place: newPlace)
+        }
+
         delegate?.updateTableView()
         navigationController?.popViewController(animated: true)
     }
@@ -231,6 +243,34 @@ class NewPlaceViewController: UIViewController {
 
     @objc private func hideKeyboard() {
         self.view.endEditing(true)
+    }
+
+    func configureViewWithPlace() {
+        if currentPlace != nil {
+            setupEditScreenNavigationBar()
+            isImageChanged = true
+            guard let data = currentPlace?.imageData, let image = UIImage(data: data) else { return }
+            mainImageOfPlace.image = image
+            mainImageOfPlace.contentMode = .scaleAspectFill
+            mainImageOfPlace.clipsToBounds = true
+            nameTextField.text = currentPlace?.name
+            locationTextField.text = currentPlace?.location
+            typeTextField.text = currentPlace?.type
+        }
+    }
+
+    private func setupEditScreenNavigationBar() {
+        title = currentPlace?.name
+        navigationItem.largeTitleDisplayMode = .always
+        let leftButton = UIBarButtonItem(barButtonSystemItem: .cancel,
+                                         target: self,
+                                         action: #selector(goToBack))
+        navigationItem.leftBarButtonItem = leftButton
+        let rightButton = UIBarButtonItem(barButtonSystemItem: .save,
+                                          target: self,
+                                          action: #selector(saveData))
+        navigationItem.rightBarButtonItem = rightButton
+        rightButton.isEnabled = true
     }
 }
 
