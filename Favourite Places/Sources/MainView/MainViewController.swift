@@ -12,6 +12,19 @@ import RealmSwift
 class MainViewController: UIViewController {
 
     var places: Results<Place>!
+    var ascendingSorting = true
+
+    private lazy var sortedControl: UISegmentedControl = {
+        let items = ["Date", "Name"]
+        let segmentedControl = UISegmentedControl(items: items)
+        segmentedControl.selectedSegmentTintColor = .systemBlue
+        segmentedControl.selectedSegmentIndex = 0
+        segmentedControl.backgroundColor = .white
+        segmentedControl.layer.borderColor = UIColor.systemBlue.cgColor
+        segmentedControl.layer.borderWidth = 1
+        segmentedControl.addTarget(self, action: #selector(sortingSelection), for: .valueChanged)
+        return segmentedControl
+    }()
 
     lazy var placesTable: UITableView = {
         let table = UITableView(frame: .zero, style: .plain)
@@ -23,6 +36,7 @@ class MainViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        view.backgroundColor = .systemBackground
         setupHierarchy()
         setupLayout()
         setupNavigationBar()
@@ -30,12 +44,18 @@ class MainViewController: UIViewController {
     }
 
     private func setupHierarchy() {
+        view.addSubview(sortedControl)
         view.addSubview(placesTable)
     }
 
     private func setupLayout() {
+        sortedControl.snp.makeConstraints { make in
+            make.top.equalTo(view.safeAreaLayoutGuide)
+            make.left.right.equalTo(view)
+        }
         placesTable.snp.makeConstraints { make in
-            make.top.left.right.bottom.equalTo(view)
+            make.top.equalTo(sortedControl.snp.bottom).offset(1)
+            make.left.right.bottom.equalTo(view)
         }
     }
 
@@ -46,12 +66,34 @@ class MainViewController: UIViewController {
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add,
                                                             target: self,
                                                             action: #selector(goToNewPlaceView))
+        navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "arrow.up.arrow.down"),
+                                                           style: .done,
+                                                           target: self,
+                                                           action: #selector(sortedPlaceByAscending))
     }
 
     @objc func goToNewPlaceView() {
         let nextVC = NewPlaceViewController()
         nextVC.delegate = self
         navigationController?.pushViewController(nextVC, animated: true)
+    }
+
+    @objc func sortedPlaceByAscending() {
+        ascendingSorting.toggle()
+        sorting()
+    }
+
+    @objc func sortingSelection() {
+        sorting()
+    }
+
+    private func sorting() {
+        if sortedControl.selectedSegmentIndex == 0 {
+            places = places.sorted(byKeyPath: "date", ascending: ascendingSorting)
+        } else {
+            places = places.sorted(byKeyPath: "name", ascending: ascendingSorting)
+        }
+        placesTable.reloadData()
     }
 }
 
