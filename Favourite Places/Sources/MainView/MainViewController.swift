@@ -41,6 +41,8 @@ class MainViewController: UIViewController {
 
     private func setupNavigationBar() {
         title = "Favorite Places"
+        navigationController?.navigationBar.prefersLargeTitles = true
+        navigationItem.largeTitleDisplayMode = .never
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add,
                                                             target: self,
                                                             action: #selector(goToNewPlaceView))
@@ -71,6 +73,11 @@ extension MainViewController: UITableViewDataSource, UITableViewDelegate {
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
+        let nextVC = NewPlaceViewController()
+        let place = places[indexPath.row]
+        nextVC.currentPlace = place
+        nextVC.delegate = self
+        navigationController?.pushViewController(nextVC, animated: true)
     }
 
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
