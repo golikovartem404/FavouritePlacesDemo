@@ -37,6 +37,16 @@ class NewPlaceViewController: UIViewController {
         return button
     }()
 
+    private lazy var mapButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.setImage(UIImage(systemName: "map"), for: .normal)
+        button.addTarget(self, action: #selector(openMap), for: .touchUpInside)
+        button.tintColor = .white
+        button.backgroundColor = .black
+        button.layer.cornerRadius = 20
+        return button
+    }()
+
     lazy var nameOfNewPlace: UILabel = {
         let label = UILabel()
         label.text = "Name"
@@ -134,6 +144,7 @@ class NewPlaceViewController: UIViewController {
     private func setupHierarchy() {
         view.addSubview(mainImageOfPlace)
         view.addSubview(photoButton)
+        view.addSubview(mapButton)
         nameStack.addArrangedSubview(nameOfNewPlace)
         nameStack.addArrangedSubview(nameTextField)
         view.addSubview(nameStack)
@@ -149,11 +160,17 @@ class NewPlaceViewController: UIViewController {
         mainImageOfPlace.snp.makeConstraints { make in
             make.top.equalTo(view.safeAreaLayoutGuide)
             make.left.right.equalTo(view)
-            make.bottom.equalTo(view.snp.centerY).multipliedBy(0.7)
+            make.bottom.equalTo(view.snp.centerY).multipliedBy(0.8)
         }
 
         photoButton.snp.makeConstraints { make in
             make.bottom.equalTo(mainImageOfPlace.snp.bottom).offset(-20)
+            make.right.equalTo(mainImageOfPlace.snp.right).offset(-20)
+            make.width.height.equalTo(40)
+        }
+
+        mapButton.snp.makeConstraints { make in
+            make.bottom.equalTo(photoButton.snp.top).offset(-15)
             make.right.equalTo(mainImageOfPlace.snp.right).offset(-20)
             make.width.height.equalTo(40)
         }
@@ -175,6 +192,7 @@ class NewPlaceViewController: UIViewController {
             make.left.equalTo(view.snp.left).offset(20)
             make.width.equalTo(view.snp.width).multipliedBy(0.9)
         }
+
     }
 
     private func setupView() {
@@ -239,6 +257,12 @@ class NewPlaceViewController: UIViewController {
         actionSheet.addAction(photo)
         actionSheet.addAction(cancel)
         present(actionSheet, animated: true)
+    }
+
+    @objc func openMap() {
+        let nextVC = MapViewController()
+        nextVC.place = currentPlace
+        navigationController?.pushViewController(nextVC, animated: true)
     }
 
     @objc private func hideKeyboard() {
