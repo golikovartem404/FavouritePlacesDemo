@@ -317,10 +317,7 @@ extension MapViewController: MKMapViewDelegate {
 }
 
 extension MapViewController: CLLocationManagerDelegate {
-//    func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
-//        checkLocationAuthorization()
-//    }
-
+    
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         checkLocationAuthorization()
     }
