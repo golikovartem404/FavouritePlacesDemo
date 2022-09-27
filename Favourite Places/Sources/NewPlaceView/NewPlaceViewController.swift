@@ -208,12 +208,7 @@ class NewPlaceViewController: UIViewController {
     }
 
     @objc func saveData() {
-        var image: UIImage?
-        if isImageChanged {
-            image = mainImageOfPlace.image
-        } else {
-            image = UIImage(named: "defaultPlaceImage")
-        }
+        let image = isImageChanged ? mainImageOfPlace.image : UIImage(named: "defaultPlaceImage")
         let imageData = image?.pngData()
         let newPlace = Place(name: nameTextField.text!,
                              location: locationTextField.text,
@@ -261,7 +256,10 @@ class NewPlaceViewController: UIViewController {
 
     @objc func openMap() {
         let nextVC = MapViewController()
-        nextVC.place = currentPlace
+        nextVC.place.name = nameTextField.text!
+        nextVC.place.location = locationTextField.text
+        nextVC.place.type = typeTextField.text
+        nextVC.place.imageData = mainImageOfPlace.image?.pngData()
         navigationController?.pushViewController(nextVC, animated: true)
     }
 
