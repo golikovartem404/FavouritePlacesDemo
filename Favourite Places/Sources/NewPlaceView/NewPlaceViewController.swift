@@ -273,7 +273,7 @@ class NewPlaceViewController: UIViewController {
     @objc func openMap() {
         let nextVC = MapViewController()
         nextVC.userPin.isHidden = true
-        nextVC.userLocationAddress.isHidden = true
+        nextVC.placeLocationAddress.isHidden = true
         nextVC.userAddressSetButton.isHidden = true
         nextVC.place.name = nameTextField.text!
         nextVC.place.location = locationTextField.text
@@ -290,6 +290,8 @@ class NewPlaceViewController: UIViewController {
     @objc func getAddress() {
         let nextVC = MapViewController()
         nextVC.locationManager.startUpdatingLocation()
+        nextVC.routeButton.isHidden = true
+        nextVC.mapViewDelegate = self
         navigationController?.pushViewController(nextVC, animated: true)
     }
 
@@ -348,5 +350,12 @@ extension NewPlaceViewController: UIImagePickerControllerDelegate, UINavigationC
         mainImageOfPlace.clipsToBounds = true
         isImageChanged = true
         dismiss(animated: true)
+    }
+}
+
+extension NewPlaceViewController: MapViewDelegate {
+
+    func getAddressOfPlace(_ address: String?) {
+        locationTextField.text = address
     }
 }
