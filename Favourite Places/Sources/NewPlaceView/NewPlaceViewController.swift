@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import CoreLocation
 
 protocol AddNewDataDelegateProtocol {
     func updateTableView()
@@ -92,6 +93,14 @@ class NewPlaceViewController: UIViewController {
         return stack
     }()
 
+    private lazy var placeLocationButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.tintColor = .black
+        button.setImage(UIImage(named: "placeLocation"), for: .normal)
+        button.addTarget(self, action: #selector(getAddress), for: .touchUpInside)
+        return button
+    }()
+
     lazy var typeOfNewPlace: UILabel = {
         let label = UILabel()
         label.text = "Type"
@@ -151,6 +160,7 @@ class NewPlaceViewController: UIViewController {
         locationStack.addArrangedSubview(locationOfNewPlace)
         locationStack.addArrangedSubview(locationTextField)
         view.addSubview(locationStack)
+        view.addSubview(placeLocationButton)
         typeStack.addArrangedSubview(typeOfNewPlace)
         typeStack.addArrangedSubview(typeTextField)
         view.addSubview(typeStack)
@@ -184,7 +194,13 @@ class NewPlaceViewController: UIViewController {
         locationStack.snp.makeConstraints { make in
             make.top.equalTo(nameStack.snp.bottom).offset(20)
             make.left.equalTo(view.snp.left).offset(20)
-            make.width.equalTo(view.snp.width).multipliedBy(0.9)
+            make.width.equalTo(view.snp.width).multipliedBy(0.7)
+        }
+
+        placeLocationButton.snp.makeConstraints { make in
+            make.centerY.equalTo(locationStack.snp.centerY)
+            make.right.equalTo(view.snp.right).offset(-20)
+            make.width.height.equalTo(35)
         }
 
         typeStack.snp.makeConstraints { make in
@@ -256,15 +272,25 @@ class NewPlaceViewController: UIViewController {
 
     @objc func openMap() {
         let nextVC = MapViewController()
+        nextVC.userPin.isHidden = true
+        nextVC.userLocationAddress.isHidden = true
+        nextVC.userAddressSetButton.isHidden = true
         nextVC.place.name = nameTextField.text!
         nextVC.place.location = locationTextField.text
         nextVC.place.type = typeTextField.text
         nextVC.place.imageData = mainImageOfPlace.image?.pngData()
+        nextVC.setupPlaceMark()
         navigationController?.pushViewController(nextVC, animated: true)
     }
 
     @objc private func hideKeyboard() {
         self.view.endEditing(true)
+    }
+
+    @objc func getAddress() {
+        let nextVC = MapViewController()
+        nextVC.locationManager.startUpdatingLocation()
+        navigationController?.pushViewController(nextVC, animated: true)
     }
 
     func configureViewWithPlace() {
