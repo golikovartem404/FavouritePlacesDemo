@@ -10,10 +10,12 @@ import MapKit
 import CoreLocation
 
 protocol MapViewDelegate {
-    func getAddressOfPlace(_ address: String?)
+    func setAddressOfPlace(_ address: String?)
 }
 
 class MapViewController: UIViewController {
+
+    // MARK: - Properties
 
     var mapViewDelegate: MapViewDelegate?
     var place = Place()
@@ -21,6 +23,9 @@ class MapViewController: UIViewController {
     let locationManager = CLLocationManager()
     let regionPerimeter = 4000.0
     var placeCoordinate: CLLocationCoordinate2D?
+    var locationReceived = false
+
+    // MARK: - Outlets
 
     private lazy var mapView: MKMapView = {
         let map = MKMapView()
@@ -40,6 +45,7 @@ class MapViewController: UIViewController {
         let label = UILabel()
         label.text = ""
         label.textAlignment = .center
+        label.numberOfLines = 0
         label.font = UIFont.systemFont(ofSize: 30)
         label.textColor = .black
         return label
@@ -68,12 +74,16 @@ class MapViewController: UIViewController {
         return button
     }()
 
+    // MARK: - Lifecycle
+
     override func viewDidLoad() {
         super.viewDidLoad()
         setupHierarchy()
         setupLayout()
         checkLocationServices()
     }
+
+    // MARK: - Setup view
 
     private func setupHierarchy() {
         view.addSubview(mapView)
@@ -120,6 +130,16 @@ class MapViewController: UIViewController {
         
     }
 
+    // Alert function
+    private func showAlert(title: String, message: String) {
+        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        let actionOK = UIAlertAction(title: "OK", style: .default)
+        alert.addAction(actionOK)
+        present(alert, animated: true)
+    }
+
+
+    // Setup place address point function
     func setupPlaceMark() {
         guard let location = place.location else { return }
 
@@ -147,13 +167,14 @@ class MapViewController: UIViewController {
         }
     }
 
-    private func showAlert(title: String, message: String) {
-        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
-        let actionOK = UIAlertAction(title: "OK", style: .default)
-        alert.addAction(actionOK)
-        present(alert, animated: true)
+    func configurePlacemark(with place: Place) {
+        self.place.name = place.name
+        self.place.location = place.location
+        self.place.type = place.type
+        self.place.imageData = place.imageData
     }
 
+    // Check geolocation services function
     private func checkLocationServices() {
         if CLLocationManager.locationServicesEnabled() {
             setupLocationManager()
@@ -171,6 +192,7 @@ class MapViewController: UIViewController {
         locationManager.desiredAccuracy = kCLLocationAccuracyBest
     }
 
+    // Check location authorization
     func checkLocationAuthorization() {
         switch locationManager.authorizationStatus {
         case .authorizedWhenInUse:
@@ -195,19 +217,24 @@ class MapViewController: UIViewController {
         }
     }
 
+
     @objc func centerViewInUserLocation() {
         showUserLocation()
     }
 
+
+    // Set place address
     @objc func doneButtonPressed() {
-        mapViewDelegate?.getAddressOfPlace(placeLocationAddress.text)
+        mapViewDelegate?.setAddressOfPlace(placeLocationAddress.text)
         navigationController?.popViewController(animated: true)
     }
 
+    // Show route to place
     @objc func routeButtonPressed() {
         getDirections()
     }
 
+    // Show current user location
     func showUserLocation() {
         if let location = locationManager.location?.coordinate {
             let region = MKCoordinateRegion(center: location,
@@ -217,12 +244,14 @@ class MapViewController: UIViewController {
         }
     }
 
+    // Get center map location function
     private func getCenterLocation(for mapView: MKMapView) -> CLLocation {
         let latitude = mapView.centerCoordinate.latitude
         let longitude = mapView.centerCoordinate.longitude
         return CLLocation(latitude: latitude, longitude: longitude)
     }
 
+    // Get route to place function
     private func getDirections() {
         guard let location = locationManager.location?.coordinate else {
             showAlert(title: "Error", message: "Current location is not found")
@@ -252,6 +281,7 @@ class MapViewController: UIViewController {
         }
     }
 
+    // Create direction request function
     private func createDirectionRequest(from coordinate: CLLocationCoordinate2D) -> MKDirections.Request? {
         guard let destinationCoordinate = placeCoordinate else { return nil }
         let startingLocation = MKPlacemark(coordinate: coordinate)
@@ -265,6 +295,8 @@ class MapViewController: UIViewController {
     }
 
 }
+
+// MARK: - Extensions
 
 extension MapViewController: MKMapViewDelegate {
 
@@ -319,7 +351,10 @@ extension MapViewController: MKMapViewDelegate {
 extension MapViewController: CLLocationManagerDelegate {
     
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        checkLocationAuthorization()
+        if !locationReceived {
+            checkLocationAuthorization()
+            locationReceived = true
+        }
     }
 }
 

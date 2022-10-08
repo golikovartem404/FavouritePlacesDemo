@@ -14,6 +14,8 @@ protocol AddNewDataDelegateProtocol {
 
 class NewPlaceViewController: UIViewController {
 
+    // MARK: - Properties
+
     var delegate: AddNewDataDelegateProtocol?
     var isImageChanged = false
     var currentPlace: Place?
@@ -41,7 +43,7 @@ class NewPlaceViewController: UIViewController {
     private lazy var mapButton: UIButton = {
         let button = UIButton(type: .system)
         button.setImage(UIImage(systemName: "map"), for: .normal)
-        button.addTarget(self, action: #selector(openMap), for: .touchUpInside)
+        button.addTarget(self, action: #selector(openMapToCheckPlaceLocation), for: .touchUpInside)
         button.tintColor = .white
         button.backgroundColor = .black
         button.layer.cornerRadius = 20
@@ -97,7 +99,7 @@ class NewPlaceViewController: UIViewController {
         let button = UIButton(type: .system)
         button.tintColor = .black
         button.setImage(UIImage(named: "placeLocation"), for: .normal)
-        button.addTarget(self, action: #selector(getAddress), for: .touchUpInside)
+        button.addTarget(self, action: #selector(openMapToGetUserLocation), for: .touchUpInside)
         return button
     }()
 
@@ -135,7 +137,7 @@ class NewPlaceViewController: UIViewController {
         setupLayout()
     }
 
-    // MARK: - Setups
+    // MARK: - View Setups
 
     private func setupNavigationBar() {
         title = "New place"
@@ -194,7 +196,7 @@ class NewPlaceViewController: UIViewController {
         locationStack.snp.makeConstraints { make in
             make.top.equalTo(nameStack.snp.bottom).offset(20)
             make.left.equalTo(view.snp.left).offset(20)
-            make.width.equalTo(view.snp.width).multipliedBy(0.7)
+            make.width.equalTo(view.snp.width).multipliedBy(0.8)
         }
 
         placeLocationButton.snp.makeConstraints { make in
@@ -270,15 +272,17 @@ class NewPlaceViewController: UIViewController {
         present(actionSheet, animated: true)
     }
 
-    @objc func openMap() {
+    // Open map to check place location
+    @objc func openMapToCheckPlaceLocation() {
         let nextVC = MapViewController()
         nextVC.userPin.isHidden = true
         nextVC.placeLocationAddress.isHidden = true
         nextVC.userAddressSetButton.isHidden = true
-        nextVC.place.name = nameTextField.text!
-        nextVC.place.location = locationTextField.text
-        nextVC.place.type = typeTextField.text
-        nextVC.place.imageData = mainImageOfPlace.image?.pngData()
+        let currentPlace = Place(name: nameTextField.text!,
+                                 location: locationTextField.text,
+                                 type: typeTextField.text,
+                                 imageData: mainImageOfPlace.image?.pngData())
+        nextVC.configurePlacemark(with: currentPlace)
         nextVC.setupPlaceMark()
         navigationController?.pushViewController(nextVC, animated: true)
     }
@@ -287,7 +291,8 @@ class NewPlaceViewController: UIViewController {
         self.view.endEditing(true)
     }
 
-    @objc func getAddress() {
+    // Open map to check usep location and set place address
+    @objc func openMapToGetUserLocation() {
         let nextVC = MapViewController()
         nextVC.locationManager.startUpdatingLocation()
         nextVC.routeButton.isHidden = true
@@ -355,7 +360,7 @@ extension NewPlaceViewController: UIImagePickerControllerDelegate, UINavigationC
 
 extension NewPlaceViewController: MapViewDelegate {
 
-    func getAddressOfPlace(_ address: String?) {
+    func setAddressOfPlace(_ address: String?) {
         locationTextField.text = address
     }
 }
