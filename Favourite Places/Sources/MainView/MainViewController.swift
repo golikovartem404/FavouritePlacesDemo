@@ -79,13 +79,17 @@ class MainViewController: UIViewController {
         title = "Favorite Places"
         navigationController?.navigationBar.prefersLargeTitles = true
         navigationItem.largeTitleDisplayMode = .never
-        navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add,
-                                                            target: self,
-                                                            action: #selector(goToNewPlaceView))
-        navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "arrow.up.arrow.down"),
-                                                           style: .done,
-                                                           target: self,
-                                                           action: #selector(sortedPlaceByAscending))
+        navigationItem.rightBarButtonItem = UIBarButtonItem(
+            barButtonSystemItem: .add,
+            target: self,
+            action: #selector(goToNewPlaceView)
+        )
+        navigationItem.leftBarButtonItem = UIBarButtonItem(
+            image: UIImage(systemName: "arrow.up.arrow.down"),
+            style: .done,
+            target: self,
+            action: #selector(sortedPlaceByAscending)
+        )
         navigationItem.searchController = searchController
         navigationController?.navigationBar.tintColor = .black
     }

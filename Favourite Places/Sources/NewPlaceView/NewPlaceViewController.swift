@@ -278,11 +278,15 @@ class NewPlaceViewController: UIViewController {
         nextVC.userPin.isHidden = true
         nextVC.placeLocationAddress.isHidden = true
         nextVC.userAddressSetButton.isHidden = true
-        let currentPlace = Place(name: nameTextField.text!,
-                                 location: locationTextField.text,
-                                 type: typeTextField.text,
-                                 imageData: mainImageOfPlace.image?.pngData())
-        nextVC.configurePlacemark(with: currentPlace)
+//        let currentPlace = Place(name: nameTextField.text!,
+//                                 location: locationTextField.text,
+//                                 type: typeTextField.text,
+//                                 imageData: mainImageOfPlace.image?.pngData())
+        nextVC.place.name = nameTextField.text!
+        nextVC.place.location = locationTextField.text
+        nextVC.place.type = typeTextField.text
+        nextVC.place.imageData = mainImageOfPlace.image?.pngData()
+//        nextVC.configurePlacemark(with: currentPlace)
         nextVC.setupPlaceMark()
         navigationController?.pushViewController(nextVC, animated: true)
     }
