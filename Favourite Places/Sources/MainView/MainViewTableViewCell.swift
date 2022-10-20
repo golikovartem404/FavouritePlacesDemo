@@ -14,6 +14,7 @@ class MainViewTableViewCell: UITableViewCell {
     lazy var imageOfPlace: UIImageView = {
         let imageView = UIImageView()
         imageView.layer.cornerRadius = 32.5
+        imageView.contentMode = .scaleAspectFill
         imageView.clipsToBounds = true
         return imageView
     }()
